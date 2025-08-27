@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Оценка риска миомы матки</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+      padding: 0 10px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .criteria {
+      margin-bottom: 20px;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.2em;
+      text-align: center;
+    }
+    .low_probability {
+        color: green;
+    }
+    .average_probability {
+        color: orange;
+    }
+    .high_probability {
+        color: red;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      gap: 10px;
+      max-width: 600px;
+      margin: auto;
+    }
+    button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+
+    /* 🔹 Адаптивные стили для телефонов */
+    @media (max-width: 1000px) {
+      .buttons {
+        flex-direction: column;
+      }
+      button {
+        font-size: 2em; 
+      }
+      /* Увеличиваем чекбоксы */
+      .criteria input[type="checkbox"] {
+        transform: scale(2);
+        margin-right: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h2>Программа оценки риска развития миомы матки</h2>
+  
+  <!-- Список критериев с чекбоксами -->
+  <form id="riskForm" class="criteria">
+    <label><input type="checkbox" value="3"> Уровень глюкозы в крови ≥ 4,9 ммоль/л (3 балла)</label><br>
+    <label><input type="checkbox" value="3"> Уровень холестерина в крови ≥ 4,8 ммоль/л (3 балла)</label><br>
+    <label><input type="checkbox" value="3"> Возраст первых родов ≥ 30 лет (3 балла)</label><br>
+    <label><input type="checkbox" value="3"> Количество беременностей ≥ 3 (3 балла)</label><br>
+    <label><input type="checkbox" value="2"> Индекс массы тела ≥ 25 кг/м² (2 балла)</label><br>
+    <label><input type="checkbox" value="2"> Артериальная гипертензия (АД ≥ 140/90 мм.рт.ст.) (2 балла)</label><br>
+    <label><input type="checkbox" value="2"> Число абортов ≥ 2 (2 балла)</label><br>
+    <label><input type="checkbox" value="1"> Возраст менархе ≤ 12 лет (1 балл)</label><br>
+    <label><input type="checkbox" value="1"> Наличие самопроизвольных выкидышей ≥ 1 (1 балл)</label><br>
+    <label><input type="checkbox" value="1"> Наличие доброкачественных новообразований яичников (1 балл)</label><br>
+    <label><input type="checkbox" value="1"> Экстракорпоральное оплодотворение в анамнезе (1 балл)</label><br>
+    <label><input type="checkbox" value="1"> Уровень антимюллерова гормона ≤ 1,2 нг/мл (1 балл)</label><br>
+  </form>
+
+  <!-- Блок кнопок -->
+  <div class="buttons">
+    <button type="button" onclick="calculateRisk()">Рассчитать риск</button>
+    <button type="button" onclick="resetForm()">Сбросить</button>
+  </div>
+
+  <!-- Результат -->
+  <div id="result" class="result"></div>
+
+  <script>
+    // Функция подсчёта суммы баллов и определения уровня риска
+    function calculateRisk() {
+      const checkboxes = document.querySelectorAll('#riskForm input[type="checkbox"]');
+      let total = 0;
+
+      // Суммируем значения выбранных чекбоксов
+      checkboxes.forEach(cb => {
+        if (cb.checked) {
+          total += parseInt(cb.value, 10);
+        }
+      });
+
+      // Определяем вероятность по диапазонам
+      let risk = '';
+      let resultClass = 'result ';
+      if (total >= 0 && total <= 4) {
+        risk = 'Низкая вероятность миомы матки';
+        resultClass += 'low_probability';
+      } else if (total >= 5 && total <= 8) {
+        risk = 'Средняя вероятность миомы матки';
+        resultClass += 'average_probability';
+      } else if (total >= 9) {
+        risk = 'Высокая вероятность миомы матки';
+        resultClass += 'high_probability';
+      }
+
+      // Выводим результат
+      document.getElementById('result').textContent =
+        `Сумма баллов: ${total}. \r\n ${risk}`;
+
+      document.getElementById('result').className = resultClass;
+    }
+
+    // Функция сброса формы и очистки результата
+    function resetForm() {
+      const checkboxes = document.querySelectorAll('#riskForm input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = false); // снимаем галочки
+      document.getElementById('result').textContent = ''; // очищаем результат
+    }
+  </script>
+</body>
+</html>
